@@ -1,0 +1,13 @@
+<mat-form-field
+  appearance="outline"
+  color="accent">
+  <mat-label>{{selectLabel}}</mat-label>
+  <mat-select
+    [value]="selectedVersion()"
+    #id_select_version
+    (valueChange)="onSelectValueChange(id_select_version.value)">
+    <mat-option *ngFor="let version of aVersions()" [value]="version.value">
+      {{version.viewValue}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

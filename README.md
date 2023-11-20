@@ -1,2 +1,3 @@
-# site
-Personal site. Only code, without configuration. See http://cereixeira.com
+# Personal site
+Only code, no configuration, no assets (sorry).
+Working in: http://cereixeira.com

@@ -1,0 +1,15 @@
+
+
+.input-xl{
+  width:50%;
+}
+
+mat-card{
+  width:50%;
+}
+label{
+  font-size: large;
+  font-style: italic;
+  color: darkgrey;
+  padding-right: 10px;
+}

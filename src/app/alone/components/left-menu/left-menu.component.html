@@ -1,0 +1,48 @@
+<mat-sidenav-container fullscreen>
+
+  <mat-sidenav #sidenav
+    mode="push"
+    class="leftMenu">
+    <!-- Menú izquierda -->
+    <mat-toolbar color = 'primary'>
+      <span>Menu</span>
+      <span class="spacer"></span>
+      <button mat-icon-button
+        (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <!-- Botonera izquierda -->
+    <mat-nav-list>
+      <mat-list-item
+        *ngFor="let item of menuItems"
+        [routerLink]="item.url"
+        (click)="sidenav.toggle()">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        {{ item.label }}
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-toolbar color = 'primary'>
+    <button mat-icon-button
+      (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>{{header}}</span>
+
+    <span class="spacer"></span>
+
+    <!-- Desplegable derecha -->
+    <app-right-menu/>
+
+  </mat-toolbar>
+
+  <div class="container">
+    <!-- Contenido -->
+    <router-outlet/>
+  </div>
+
+</mat-sidenav-container>
+

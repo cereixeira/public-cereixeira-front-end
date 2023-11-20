@@ -1,0 +1,47 @@
+
+    <!-- Derecha cabecera No autorizado -->
+    <button *ngIf="!authenticated()"
+      mat-stroked-button
+      routerLink="/auth"
+      style="font-size: 0.8em;">
+        <span>LogIn</span>
+      <mat-icon>login</mat-icon>
+    </button>
+
+    <!-- Derecha cabecera Autorizado -->
+    <div *ngIf="authenticated()">
+      <button mat-stroked-button
+        [matMenuTriggerFor]="menuRight"
+        class="right-menu-main-button">
+          [{{ userName() }}]
+      </button>
+
+      <mat-menu #menuRight="matMenu">
+        <div class="right-menu-item">
+          <button mat-menu-item
+            class="right-menu-button"
+            routerLink="/user">
+            <span>Usuario</span>
+            <mat-icon>person_pin</mat-icon>
+          </button>
+        </div>
+
+        <div *ngIf="isAdmin()" class="right-menu-item">
+          <button mat-menu-item
+            class="right-menu-button"
+            routerLink="/admin/manager">
+            <span>Admin</span>
+            <mat-icon>settings</mat-icon>
+          </button>
+        </div>
+
+        <div class="right-menu-item">
+          <button mat-menu-item
+            class="right-menu-button"
+            (click)="onLogout()">
+            <span>Logout</span>
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+      </mat-menu>
+    </div>

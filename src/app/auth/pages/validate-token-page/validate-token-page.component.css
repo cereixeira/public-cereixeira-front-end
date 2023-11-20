@@ -1,0 +1,28 @@
+mat-form-field {
+  width: 100%;
+  min-width: 320px;
+}
+mat-card{
+  padding: 18px;
+  margin: 5px;
+}
+mat-card-title,
+mat-card-content {
+  display: flex;
+  justify-content: center;
+}
+.button-left {
+  justify-content: flex-start;
+}
+.button-right {
+  justify-content: flex-end;
+}
+
+textarea {
+  resize: none;
+  background-color: #4A4A4A;
+}
+textarea:focus {
+  outline: none !important;
+  background-color: #707070;
+}

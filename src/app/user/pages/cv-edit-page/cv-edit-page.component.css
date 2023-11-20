@@ -1,0 +1,86 @@
+mat-expansion-panel-header{
+  background-color:rgb(56, 56, 56);
+  color:grey;
+}
+mat-hint{
+  color: rgb(211, 211, 211);
+}
+
+.p-compact{
+  margin: 0px;
+}
+.header-action-item{
+  margin: 10px;
+}
+.info-box-group-border{
+  flex: 0 0 auto;
+  border:thin solid #7B1FA2;
+  margin-bottom: 1em;
+  /*margin-right: 2em; */
+  padding-top: 1em;
+  padding-right: 1.2em;
+  padding-bottom: 1.1em;
+  padding-left: 1.2em;
+}
+.spinner{
+  position: fixed;
+  top: 30%;
+  left: 45%;
+  z-index: 10;
+}
+.button-save{
+  position: fixed;
+  top: 60px;
+  right: 15px;
+  z-index: 10;
+}
+.button-validate{
+  position: fixed;
+  top: 100px;
+  right: 15px;
+  z-index: 11;
+}
+.input-xs{
+  width:180px;
+}
+.input-s{
+  width:190px;
+}
+.input-l{
+  width:275px;
+}
+.input-xl{
+  width:70%;
+}
+.input-xxl{
+  width:100%;
+}
+.cv{
+  font-family: 'Calibri';
+  color: white;
+
+  flex: 0 0 auto;
+  width: 96%;
+  padding-top: 2em;
+  align-content: center;
+}
+.spacer-col{
+  flex: 0 0 auto;
+  width: 2%;
+}
+.info-box{
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.photo{
+  width:auto;
+  height:auto;
+  max-width: 260px;
+}
+.ajustment-hl2-up{
+  margin-top: 12px;
+}
+.file-input-hidden {
+  display: none;
+}

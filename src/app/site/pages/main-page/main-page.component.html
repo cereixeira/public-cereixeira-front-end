@@ -1,0 +1,24 @@
+
+<div class="p-4"
+  [ngClass]="{'main-phone': isPhonePortrait}">
+
+  <div class="flex" style="max-width:70%">
+    <p class="pl-4 pb-2" *ngIf="siteMain"><cite>{{siteMain.definition}}</cite></p>
+  </div>
+
+  <div class="flex m-4">
+    <div style="max-width:30%">
+      <img src="assets/cereixeira-arbol.png" alt="..." style="max-width:100%; ">
+    </div>
+    <div class="flex pl-5" style="max-width:60%; width:auto; height:auto;">
+      <div *ngIf="siteMain" >
+        <p *ngFor="let p of siteMain.content">{{ p }}</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+

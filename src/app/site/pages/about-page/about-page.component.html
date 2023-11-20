@@ -1,0 +1,39 @@
+
+<div *ngIf="siteAbout"
+  class="pt-3">
+
+  <p
+    class="pl-4 pr-3"
+    [ngClass]="{'about-phone': isPhonePortrait}"
+    *ngFor="let content of siteAbout()?.content">
+    {{ content }}
+  </p>
+
+  <div class="grid p-4">
+    <div *ngFor="let item of siteAbout()?.items"
+      class="col-12 sm:col-6 md:col-4 xl:col-3">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{item.title}}</mat-card-title>
+            <mat-card-subtitle>{{item.description}}</mat-card-subtitle>
+          </mat-card-header>
+
+          <img [src]="item.urlImg" alt="logo" mat-card-image />
+
+          <mat-card-content class="mt-2">
+            <p>{{item.details}}</p>
+            <mat-divider></mat-divider>
+            <p>
+              <label>Site:&nbsp;</label>
+              <a [href]="item.urlSite"
+                target="_blank">
+                {{item.title}}
+              </a>
+            </p>
+          </mat-card-content>
+        </mat-card>
+    </div>
+  </div>
+</div>
+
+

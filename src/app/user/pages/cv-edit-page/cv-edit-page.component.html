@@ -1,0 +1,1086 @@
+<div [hidden]="hiddenSpinner()" class="spinner">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div class="grid">
+  <div class="spacer-col"></div>
+  <div class="cv">
+    <form [formGroup]="cvFormGroup"
+      id="cvFormGroup"
+      autocomplete="off"
+      (ngSubmit)="onValidate(cvFormGroup)">
+
+      <!-- Botón Guardar (flotante) -->
+      <!-- <button *ngIf="selectedVersion()"
+        mat-raised-button
+        color="primary"
+        class="button-save"
+        type="button"
+        (click)="onSave()">
+          <mat-icon>save</mat-icon>
+          <span i18n>Guardar</span>
+      </button> -->
+
+      <!-- Botón Validar (flotante) -->
+      <!-- <button *ngIf="selectedVersion()"
+        mat-raised-button
+        color="accent"
+        class="button-validate"
+        form="cvFormGroup"
+        type="submit">
+        <mat-icon>check</mat-icon>
+        <span i18n>Validar</span>
+      </button> -->
+
+      <!-- Botonera 1 -->
+      <div>
+        <!-- nuevo botón cargar desde pc fichero json abra dialogo y actualize formulario-->
+        <button
+          mat-raised-button
+          class="header-action-item"
+          color="accent"
+          type="button"
+          (click)="onNew()">
+           <mat-icon>add_box</mat-icon>
+           <span i18n>Nueva Versión</span>
+        </button>
+      </div>
+
+      <!-- Botonera 2 -->
+
+      <!-- Select versión-->
+      <!-- [selectedVersion]="selectedVersion()" -->
+      <app-select-version class="pl-2"
+        #id_select_version
+        (onCvData)="onSelectValueChange($event)"/>
+
+      <div *ngIf="selectedVersion()">
+
+        <!-- Botón Cargar json -->
+        <input
+          class="file-input-hidden"
+          #jsonFileUpload
+          type="file"
+          accept="application/json"
+          (change)="onSelectJson(jsonFileUpload)">
+        <button mat-raised-button
+          class="header-action-item"
+          color="accent"
+          type="button"
+          (click)="jsonFileUpload.click()">
+            <mat-icon>file_upload</mat-icon>
+            <span i18n>Cargar</span>
+        </button>
+
+        <!-- Botón Borrar versión -->
+        <button mat-raised-button
+          class="header-action-item"
+          color="warn"
+          type="button"
+          (click)="onDelete()">
+            <mat-icon>delete</mat-icon>
+            <span i18n>Borrar Versión</span>
+        </button>
+
+        <!-- Botón Reset datos -->
+        <button mat-raised-button
+          class="header-action-item"
+          color="warn"
+          type="button"
+          (click)="onReset()">
+            <mat-icon>delete</mat-icon>
+            <span i18n>Reset campos</span>
+        </button>
+
+        <!-- slide confirmar borrar -->
+        <mat-slide-toggle
+          class="header-action-item"
+          #id_slideBorrar
+          color="warn"
+          checked="true"
+          disabled="false"
+          matTooltip="Pedir confirmación al borrar bloques de elementos."
+          (change)="onSlideBorrar(id_slideBorrar.checked)">
+        </mat-slide-toggle>
+
+        <!-- Botón Descargar -->
+        <a mat-raised-button
+          class="header-action-item"
+          [href]="cvJsonDownload()"
+          [download]="'cv-'+selectedVersion()+'.json'"
+          target="_blank"
+          class="header-action-item"
+          (click)="cvJsonDownload.set( getSafeResource() )">
+          <mat-icon>file_download</mat-icon>
+          Descargar
+        </a>
+      </div>
+      <!-- Fin: Botonera 2 -->
+
+      <br/>
+
+      <mat-accordion *ngIf="selectedVersion()">
+
+        <!-- Panel Personal -->
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Información Personal
+            </mat-panel-title>
+            <mat-panel-description>
+              Nombre, email, teléfono...
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!-- Personal -->
+          <div class="info-box">
+            <div formGroupName="personal">
+              <p>
+                <mat-form-field subscriptSizing="dynamic">
+                  <mat-label>*Sección Inf. Pers.</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="titulo"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(personal,'titulo')">
+                    {{ getErrorField(personal,'titulo') }}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <!-- Subir Foto -->
+              <input
+                class="file-input-hidden"
+                #imageFileUpload
+                type="file"
+                accept="image/*"
+                (change)="onSelectImg(imageFileUpload)">
+              <button mat-mini-fab
+                color="primary"
+                class="upload-btn"
+                type="button"
+                (click)="imageFileUpload.click()">
+                  <mat-icon>attach_file</mat-icon>
+              </button>
+              <br/>
+              <img *ngIf="personal.value.urlFoto"
+                class="photo"
+                [src]="personal.value.urlFoto"/>
+
+              <p>
+                <mat-form-field class="input-xl" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Nombre completo</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="nombre"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(personal,'nombre')">
+                    {{getErrorField(personal,'nombre')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Etiqueta teléfono</mat-label>
+                  <input matInput
+                        type="text"
+                        style="height: 50%"
+                        formControlName="labelTelefono"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(personal,'labelTelefono')">
+                    {{getErrorField(personal,'labelTelefono')}}
+                  </mat-error>
+                </mat-form-field>
+                :&nbsp;
+                <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Num. teléfono</mat-label>
+                  <input matInput
+                        #id_personal_telefono
+                        type="text"
+                        style="height:50%"
+                        formControlName="telefono"
+                        placeholder="">
+                  <mat-hint align="end">{{id_personal_telefono.value.length}} / 9</mat-hint>
+                  <mat-error *ngIf="isErrorField(personal,'telefono')">
+                    {{getErrorField(personal,'telefono')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Etiqueta email</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelMail"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(personal,'labelMail')">
+                    {{getErrorField(personal,'labelMail')}}
+                  </mat-error>
+                </mat-form-field>
+                :&nbsp;
+                <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Email</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="mail"
+                        placeholder="">
+
+                  <mat-error *ngIf="isErrorField(personal,'mail')">
+                    {{getErrorField(personal,'mail')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Etiqueta nacionalidad</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelNacionalidad"
+                        placeholder="" >
+                  <mat-error *ngIf="isErrorField(personal,'labelNacionalidad')">
+                    {{getErrorField(personal,'labelNacionalidad')}}
+                  </mat-error>
+                </mat-form-field>
+                :&nbsp;
+                <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Nacionalidad</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="nacionalidad"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(personal,'nacionalidad')">
+                    {{getErrorField(personal,'nacionalidad')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+
+              <!-- Campo Extra (dinámico) -->
+              <div formArrayName="extra">
+                <div *ngFor="let item of personalDatosExtra.controls; let extraIndex=index">
+                  <!-- Botón eliminar campo extra -->
+                  <button mat-stroked-button
+                    color="warn"
+                    type="button"
+                    (click)="removeFromArray(personalDatosExtra, extraIndex)">
+                      <mat-icon>arrow_downward</mat-icon>
+                      <span i18n>Eliminar campos extra</span>
+                  </button>
+                  <div class="info-box-group-border">
+                    <div [formGroupName]="extraIndex">
+                      <p>
+                        <mat-form-field class="input-s" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Etiqueta Extra</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="label"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(personalDatosExtra,extraIndex, 'label')">
+                            {{getErrorFieldInArray(personalDatosExtra,extraIndex, 'label')}}
+                          </mat-error>
+                        </mat-form-field>
+                        :&nbsp;
+                        <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Valor Extra</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="value"
+                                placeholder="">
+
+                          <mat-error *ngIf="isErrorFieldInArray(personalDatosExtra,extraIndex, 'value')">
+                            {{getErrorFieldInArray(personalDatosExtra,extraIndex, 'value')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                    </div>
+                  </div>
+                </div> <!-- bucle for -->
+
+                <!-- botón añadir -->
+                <button mat-stroked-button
+                  color="primary"
+                  type="button"
+                  (click)="addPersonalDatosExtra(personalDatosExtra, null)">
+                    <mat-icon>arrow_downward</mat-icon>
+                    <span>Añadir campos extra</span>
+                </button>
+
+              </div> <!-- fin formArrayName -->
+
+            </div><!-- fin formGroupName -->
+
+          </div>
+          <!-- Fin: Personal -->
+          <!-- botón guardar -->
+          <div mat-dialog-actions align="center">
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="primary"
+              type="button"
+              (click)="onSave()">
+              <mat-icon>save</mat-icon>
+              <span i18n>Guardar</span>
+            </button>
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="accent"
+              type="button"
+              (click)="onValidate(personal)">
+              <mat-icon>check</mat-icon>
+              <span i18n>Validar</span>
+            </button>
+          </div>
+          <!-- Fin: botón guardar -->
+        </mat-expansion-panel>
+        <!-- Fin: Panel Personal -->
+
+        <!-- Panel Profesional -->
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Información Profesional
+            </mat-panel-title>
+            <mat-panel-description>
+              Enumerar los distintos puestos en distintas empresas.
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!-- Profesional -->
+          <div class=" info-box">
+            <div formGroupName="profesional">
+              <p>
+                <mat-form-field subscriptSizing="dynamic">
+                  <mat-label>*Sección Inf. Prof.</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="titulo"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(profesional,'titulo')">
+                    {{ getErrorField(profesional,'titulo') }}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <div formArrayName="datos">
+                <div *ngFor="let item of profesionalDatos.controls; let profesionalIndex=index">
+                  <!-- Botón eliminar campos dato profesional-->
+                  <button mat-stroked-button
+                    color="warn"
+                    type="button"
+                    (click)="removeFromArray(profesionalDatos, profesionalIndex)">
+                      <mat-icon>arrow_downward</mat-icon>
+                      <span>Eliminar campos dato profesional</span>
+                  </button>
+                  <div class="info-box-group-border">
+                    <div [formGroupName]="profesionalIndex">
+                      <p>
+                        <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Fecha Inicio</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="fechaIni"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(profesionalDatos, profesionalIndex,'fechaIni')">
+                            {{ getErrorFieldInArray(profesionalDatos, profesionalIndex,'fechaIni') }}
+                          </mat-error>
+                        </mat-form-field>
+                        &nbsp;-&nbsp;
+                        <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Fecha Fin</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="fechaFin"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(profesionalDatos, profesionalIndex,'fechaFin')">
+                            {{ getErrorFieldInArray(profesionalDatos, profesionalIndex,'fechaFin') }}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Puesto en empresa</mat-label>
+                          <input matInput
+                              type="text"
+                              formControlName="puesto"
+                              placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(profesionalDatos,profesionalIndex, 'puesto')">
+                            {{getErrorFieldInArray(profesionalDatos,profesionalIndex, 'puesto')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Valor Extra</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="empresa"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(profesionalDatos,profesionalIndex, 'empresa')">
+                            {{getErrorFieldInArray(profesionalDatos,profesionalIndex, 'empresa')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xxl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Tecnologias</mat-label>
+                          <textarea matInput
+                                  formControlName="tecnologias"
+                                  rows="3"
+                                  placeholder=""></textarea>
+                          <mat-error *ngIf="isErrorFieldInArray(profesionalDatos,profesionalIndex, 'tecnologias')">
+                            {{getErrorFieldInArray(profesionalDatos,profesionalIndex, 'tecnologias')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+
+                      <div formArrayName="descripciones">
+                        <div *ngFor="let item of getProfesionalDatosDescripcion(profesionalDatos, profesionalIndex).controls; let descripcionIndex=index">
+                          <p>
+                            <!-- Botón eliminar descripción -->
+                            <button mat-stroked-button
+                              color="warn"
+                              type="button"
+                              (click)="removeFromArray(getProfesionalDatosDescripcion(profesionalDatos, profesionalIndex), descripcionIndex)">
+                                <mat-icon>arrow_downward</mat-icon>
+                                <span i18n>Eliminar descripción</span>
+                            </button>
+                            <br/>
+                            <mat-form-field class="input-xxl" subscriptSizing="dynamic" appearance="outline">
+                              <mat-label>*Descripción ({{descripcionIndex}})</mat-label>
+                              <textarea matInput
+                                [formControlName]="descripcionIndex"
+                                rows="3"
+                                placeholder=""></textarea>
+
+                              <!-- <mat-error *ngIf="isErrorFieldInArray(getProfesionalDatosDescripcion(profesionalDatos, profesionalIndex),descripcionIndex, 'descripciones')">
+                                {{getErrorFieldInArray(getProfesionalDatosDescripcion(profesionalDatos, profesionalIndex),descripcionIndex, 'descripciones')}}
+                              </mat-error> -->
+                            </mat-form-field>
+                          </p>
+                        </div>
+                      </div>
+                      <!-- botón añadir -->
+                      <button mat-stroked-button
+                        color="primary"
+                        type="button"
+                        (click)="addProfesionalDatoDescripcion(getProfesionalDatosDescripcion(profesionalDatos, profesionalIndex), null)">
+                          <mat-icon>arrow_downward</mat-icon>
+                          <span i18n>Añadir descripción</span>
+                      </button>
+
+                    </div> <!-- [formGroupName]="profesionalIndex" -->
+                  </div> <!-- borde estetico -->
+                </div><!-- bucle for  -->
+              </div><!-- Fin: formArrayName="datos" -->
+            </div><!-- Fin: formGroupName="profesional"-->
+            <!-- botón añadir bloque campo profesional-->
+            <button mat-stroked-button
+              color="primary"
+              type="button"
+              (click)="addProfesionalDato(profesionalDatos, null)">
+                <mat-icon>arrow_downward</mat-icon>
+                <span>Añadir datos profesionales</span>
+            </button>
+          </div>
+          <!-- Fin: Profesional -->
+
+          <!-- botón guardar -->
+          <div mat-dialog-actions align="center">
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="primary"
+              type="button"
+              (click)="onSave()">
+              <mat-icon>save</mat-icon>
+              <span i18n>Guardar</span>
+            </button>
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="accent"
+              type="button"
+              (click)="onValidate(profesional)">
+              <mat-icon>check</mat-icon>
+              <span i18n>Validar</span>
+            </button>
+          </div>
+          <!-- Fin: botón guardar -->
+
+        </mat-expansion-panel>
+        <!-- Fin: Panel Profesional -->
+
+        <!-- Panel Formación -->
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Formación Académica
+            </mat-panel-title>
+            <mat-panel-description>
+              Enumerar formación académica regalda.
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!-- Formación -->
+          <div class=" info-box">
+            <div formGroupName="formacion">
+              <p>
+                <mat-form-field subscriptSizing="dynamic">
+                  <mat-label i18n>*Sección Formación.</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="titulo"
+                        placeholder="">
+
+                  <mat-error *ngIf="isErrorField(formacion,'titulo')">
+                    {{ getErrorField(formacion,'titulo') }}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <div formArrayName="datos">
+                <div *ngFor="let item of formacionDatos.controls; let formacionIndex=index">
+                  <!-- Botón eliminar formación-->
+                  <button mat-stroked-button
+                    color="warn"
+                    type="button"
+                    (click)="removeFromArray(formacionDatos, formacionIndex)">
+                      <mat-icon>arrow_downward</mat-icon>
+                      <span>Eliminar formación</span>
+                  </button>
+
+                  <div class="info-box-group-border">
+                    <div [formGroupName]="formacionIndex">
+                      <p>
+                        <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Fecha Inicio</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="fechaIni"
+                                placeholder="">
+                        </mat-form-field>
+                        &nbsp;-&nbsp;
+                        <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Fecha Fin</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="fechaFin"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(formacionDatos, formacionIndex,'fechaFin')">
+                            {{ getErrorFieldInArray(formacionDatos, formacionIndex,'fechaFin') }}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Nombre del centro</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="nombreCentro"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(formacionDatos, formacionIndex, 'nombreCentro')">
+                            {{getErrorFieldInArray(formacionDatos,formacionIndex, 'nombreCentro')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Título</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="titulo"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(formacionDatos, formacionIndex, 'titulo')">
+                            {{getErrorFieldInArray(formacionDatos,formacionIndex, 'titulo')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xxl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Descripción</mat-label>
+                          <textarea matInput
+                            formControlName="descripcion"
+                            rows="3"
+                            placeholder=""></textarea>
+                          <mat-error *ngIf="isErrorFieldInArray(formacionDatos,formacionIndex, 'descripcion')">
+                            {{getErrorFieldInArray(formacionDatos,formacionIndex, 'descripcion')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+
+                    </div> <!-- [formGroupName]="" -->
+                  </div> <!-- borde estetico -->
+                </div><!-- bucle for  -->
+              </div><!-- Fin: formArrayName="datos" -->
+            </div><!-- Fin: formGroupName="formacion" -->
+            <!-- botón añadir bloque formación-->
+            <button mat-stroked-button
+              color="primary"
+              type="button"
+              (click)="addFormacionDato(formacionDatos, null)">
+                <mat-icon>arrow_downward</mat-icon>
+                <span i18n>Añadir formación</span>
+            </button>
+          </div>
+          <!-- Fin: Formación -->
+          <!-- botón guardar -->
+          <div mat-dialog-actions align="center">
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="primary"
+              type="button"
+              (click)="onSave()">
+              <mat-icon>save</mat-icon>
+              <span i18n>Guardar</span>
+            </button>
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="accent"
+              type="button"
+              (click)="onValidate(formacion)">
+              <mat-icon>check</mat-icon>
+              <span i18n>Validar</span>
+            </button>
+          </div>
+          <!-- Fin: botón guardar -->
+
+        </mat-expansion-panel>
+        <!-- Fin: Panel Formación -->
+
+        <!-- Panel Cursos -->
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Cursos y otras formaciones
+            </mat-panel-title>
+            <mat-panel-description>
+              Enumerar cursos de formación.
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!-- Cursos -->
+          <div class=" info-box">
+            <div formGroupName="cursos">
+              <p>
+                <mat-form-field subscriptSizing="dynamic">
+                  <mat-label i18n>*Sección Cursos.</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="titulo"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(cursos,'titulo')">
+                    {{ getErrorField(cursos,'titulo') }}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <div formArrayName="datos">
+                <div *ngFor="let item of cursosDatos.controls; let cursosIndex=index">
+                  <!-- Botón eliminar cursos-->
+                  <button mat-stroked-button
+                    color="warn"
+                    type="button"
+                    (click)="removeFromArray(cursosDatos, cursosIndex)">
+                      <mat-icon>arrow_downward</mat-icon>
+                      <span>Eliminar curso</span>
+                  </button>
+
+                  <div class="info-box-group-border">
+                    <div [formGroupName]="cursosIndex">
+                      <p>
+                        <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Fecha Inicio</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="fechaIni"
+                                placeholder="">
+                        </mat-form-field>
+                        &nbsp;-&nbsp;
+                        <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Fecha Fin</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="fechaFin"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(cursosDatos, cursosIndex,'fechaFin')">
+                            {{ getErrorFieldInArray(cursosDatos, cursosIndex,'fechaFin') }}
+                          </mat-error>
+                        </mat-form-field>
+                        &nbsp;-&nbsp;
+                        <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>Horas totales</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="horas"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(cursosDatos, cursosIndex,'horas')">
+                            {{ getErrorFieldInArray(cursosDatos, cursosIndex,'horas') }}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Nombre del centro</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="nombreCentro"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(cursosDatos, cursosIndex, 'nombreCentro')">
+                            {{getErrorFieldInArray(cursosDatos,cursosIndex, 'nombreCentro')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Título</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="titulo"
+                                placeholder="">
+                          <mat-error *ngIf="isErrorFieldInArray(cursosDatos, cursosIndex, 'titulo')">
+                            {{getErrorFieldInArray(cursosDatos, cursosIndex, 'titulo')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+                      <p>
+                        <mat-form-field class="input-xxl" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>*Descripción</mat-label>
+                          <textarea matInput
+                            formControlName="descripcion"
+                            rows="3"
+                            placeholder=""></textarea>
+                          <mat-error *ngIf="isErrorFieldInArray(cursosDatos, cursosIndex, 'descripcion')">
+                            {{getErrorFieldInArray(cursosDatos, cursosIndex, 'descripcion')}}
+                          </mat-error>
+                        </mat-form-field>
+                      </p>
+
+                    </div> <!-- [formGroupName]="" -->
+                  </div> <!-- borde estetico -->
+                </div><!-- bucle for  -->
+              </div><!-- Fin: formArrayName="datos" -->
+            </div><!-- Fin: formGroupName="cursos" -->
+            <!-- botón añadir bloque formación-->
+            <button mat-stroked-button
+              color="primary"
+              type="button"
+              (click)="addCursosDato(cursosDatos, null)">
+                <mat-icon>arrow_downward</mat-icon>
+                <span i18n>Añadir formación</span>
+            </button>
+          </div>
+          <!-- Fin: Cursos -->
+
+          <!-- botón guardar -->
+          <div mat-dialog-actions align="center">
+            <button
+              mat-raised-button
+              class="header-action-item"a
+              color="primary"
+              type="button"
+              (click)="onSave()">
+              <mat-icon>save</mat-icon>
+              <span i18n>Guardar</span>
+            </button>
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="accent"
+              type="button"
+              (click)="onValidate(cursos)">
+              <mat-icon>check</mat-icon>
+              <span i18n>Validar</span>
+            </button>
+          </div>
+          <!-- Fin: botón guardar -->
+
+        </mat-expansion-panel>
+        <!-- Fin: Panel Cursos -->
+
+        <!-- Panel Capacidades -->
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Capacidades y Aptitudes
+            </mat-panel-title>
+            <mat-panel-description>
+              Descripción de capacidades comunicativas, de organización, etc...
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!-- Capacidades -->
+          <div class="info-box">
+            <div formGroupName="capacidades">
+              <p>
+                <mat-form-field subscriptSizing="dynamic">
+                  <mat-label i18n>*Sección Capacidades.</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="titulo"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'titulo')">
+                    {{ getErrorField(capacidades,'titulo') }}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+
+              <p>
+                <mat-form-field class="input-s" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Etiqueta Lengua materna</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelNativo"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades, 'labelNativo')">
+                    {{getErrorField(capacidades, 'labelNativo')}}
+                  </mat-error>
+                </mat-form-field>
+                &nbsp;-&nbsp;
+                <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Lengua materna</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="nativo"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades, 'nativo')">
+                    {{getErrorField(capacidades, 'nativo')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+
+              <p>
+                <mat-form-field class="input-s" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>Etiqueta Otros idiomas</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelOtrosIdiomas"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'labelOtrosIdiomas')">
+                    {{getErrorField(capacidades,'labelOtrosIdiomas')}}
+                  </mat-error>
+                </mat-form-field>
+                &nbsp;-&nbsp;
+                <mat-form-field class="input-s" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>Etiqueta Lectura</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelLectura"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'labelLectura')">
+                    {{getErrorField(capacidades,'labelLectura')}}
+                  </mat-error>
+                </mat-form-field>
+                &nbsp;-&nbsp;
+                <mat-form-field class="input-s" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>Etiqueta Escritura</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelEscritura"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'labelEscritura')">
+                    {{getErrorField(capacidades,'labelEscritura')}}
+                  </mat-error>
+                </mat-form-field>
+                &nbsp;-&nbsp;
+                <mat-form-field class="input-s" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>Etiqueta Oral</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelOral"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'labelOral')">
+                    {{getErrorField(capacidades,'labelOral')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <div formArrayName="idiomas">
+                <div *ngFor="let item of capacidadesIdiomas.controls; let idiomasIndex=index">
+                  <!-- Botón eliminar cursos-->
+                  <button mat-stroked-button
+                    color="warn"
+                    type="button"
+                    (click)="removeFromArray(capacidadesIdiomas, idiomasIndex)">
+                      <mat-icon>arrow_downward</mat-icon>
+                      <span>Eliminar idioma</span>
+                  </button>
+
+                  <div class="info-box-group-border" style="padding-bottom: 0px;">
+                    <div [formGroupName]="idiomasIndex">
+                      <p>
+                        <mat-form-field class="input-xs" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>Idioma</mat-label>
+                          <input matInput
+                                type="text"
+                                formControlName="titulo"
+                                placeholder="">
+                        </mat-form-field>
+                        &nbsp;-&nbsp;
+                        <mat-form-field class="input-xs" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>Nivel lectura</mat-label>
+                          <mat-select
+                              formControlName="lectura">
+                            <mat-option *ngFor="let level of languageLevel" [value]="level.value">
+                              {{level.viewValue}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        &nbsp;-&nbsp;
+                        <mat-form-field class="input-xs" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>Nivel escritura</mat-label>
+                          <mat-select
+                              formControlName="escritura">
+                            <mat-option *ngFor="let level of languageLevel" [value]="level.value">
+                              {{level.viewValue}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        &nbsp;-&nbsp;
+                        <mat-form-field class="input-xs" subscriptSizing="dynamic" appearance="outline">
+                          <mat-label>Nivel oral</mat-label>
+                          <mat-select
+                              formControlName="oral">
+                            <mat-option *ngFor="let level of languageLevel" [value]="level.value">
+                              {{level.viewValue}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </p>
+                    </div> <!-- [formGroupName]="" -->
+                  </div> <!-- borde estetico -->
+                </div><!-- bucle for  -->
+              <!-- botón añadir bloque idioma-->
+              <button mat-stroked-button
+                color="primary"
+                type="button"
+                (click)="addCapacidadesIdioma(capacidadesIdiomas, null)">
+                  <mat-icon>arrow_downward</mat-icon>
+                  <span i18n>Añadir idioma</span>
+              </button>
+              </div><!-- div formArrayName -->
+              <p>
+                <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Etiqueta Comunicación</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelComunicacion"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'labelComunicacion')">
+                    {{getErrorField(capacidades,'labelComunicacion')}}
+                  </mat-error>
+                </mat-form-field>
+                :&nbsp;&nbsp;&nbsp;
+                <mat-form-field class="input-xxl" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Comunicación</mat-label>
+                  <textarea matInput
+                          formControlName="comunicacion"
+                          rows="4"
+                          placeholder=""></textarea>
+                  <mat-error *ngIf="isErrorField(capacidades,'comunicacion')">
+                    {{getErrorField(capacidades,'comunicacion')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Etiqueta Organización</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelOrganizacion"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'labelOrganizacion')">
+                    {{getErrorField(capacidades,'labelOrganizacion')}}
+                  </mat-error>
+                </mat-form-field>
+                :&nbsp;&nbsp;&nbsp;
+                <mat-form-field class="input-xxl" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Organización</mat-label>
+                  <textarea matInput
+                          formControlName="organizacion"
+                          rows="4"
+                          placeholder=""></textarea>
+                  <mat-error *ngIf="isErrorField(capacidades,'organizacion')">
+                    {{getErrorField(capacidades,'organizacion')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Etiqueta Técnicas</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelTecnicas"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'labelTecnicas')">
+                    {{getErrorField(capacidades,'labelTecnicas')}}
+                  </mat-error>
+                </mat-form-field>
+                :&nbsp;&nbsp;&nbsp;
+                <mat-form-field class="input-xxl" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Técnicas</mat-label>
+                  <textarea matInput
+                          formControlName="tecnicas"
+                          rows="4"
+                          placeholder=""></textarea>
+                  <mat-error *ngIf="isErrorField(capacidades,'tecnicas')">
+                    {{getErrorField(capacidades,'tecnicas')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field class="input-l" subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Etiqueta carnet</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="labelCarnet"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'labelCarnet')">
+                    {{getErrorField(capacidades,'labelCarnet')}}
+                  </mat-error>
+                </mat-form-field>
+                :&nbsp;&nbsp;&nbsp;
+              </p>
+              <p>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline">
+                  <mat-label>*Carnet</mat-label>
+                  <input matInput
+                        type="text"
+                        formControlName="carnet"
+                        placeholder="">
+                  <mat-error *ngIf="isErrorField(capacidades,'carnet')">
+                    {{getErrorField(capacidades,'carnet')}}
+                  </mat-error>
+                </mat-form-field>
+              </p>
+
+            </div>
+            <!-- fin: formGroupName="capacidades" -->
+          </div>
+          <!-- fin: Capacidades -->
+          <!-- botón guardar -->
+          <div mat-dialog-actions align="center">
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="primary"
+              type="button"
+              (click)="onSave()">
+              <mat-icon>save</mat-icon>
+              <span i18n>Guardar</span>
+            </button>
+            <button
+              mat-raised-button
+              class="header-action-item"
+              color="accent"
+              type="button"
+              (click)="onValidate(capacidades)">
+              <mat-icon>check</mat-icon>
+              <span i18n>Validar</span>
+            </button>
+          </div>
+          <!-- Fin: botón guardar -->
+        </mat-expansion-panel>
+        <!-- Fin: Panel Capacidades -->
+
+      </mat-accordion>
+
+    </form>
+
+  </div>
+  <div class="spacer-col"></div>
+</div>

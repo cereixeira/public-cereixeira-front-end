@@ -1,0 +1,18 @@
+
+.container-form {
+  font-family: 'Calibri';
+  color: white;
+  background-color: rgb(58, 58, 58);
+
+  padding: 1px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+
+
+

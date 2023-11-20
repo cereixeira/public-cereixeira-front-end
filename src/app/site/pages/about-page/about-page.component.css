@@ -1,0 +1,29 @@
+.about-phone{
+  font-size: 0.7rem;
+}
+
+img{
+  padding-top: 15px;
+  max-width: 80%;
+  display: block;
+  margin:auto;
+  aspect-ratio: 4/3;
+}
+
+a:link {
+  color: green;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: green;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: lightgreen;
+  background-color: transparent;
+  text-decoration: none;
+}

@@ -1,0 +1,27 @@
+<mat-card class="dialog">
+
+  <mat-card-title>{{data.dialogTitle}}</mat-card-title>
+  <mat-divider></mat-divider>
+  <br/>
+  <mat-card-content>
+    {{data.dialogText}}
+  </mat-card-content>
+  <br/>
+  <mat-card-actions>
+    <button
+      mat-stroked-button
+      [mat-dialog-close]="false">
+      Cancel
+    </button>
+    <span class="spacer">&nbsp;</span>
+    <button
+      mat-flat-button
+      color="primary"
+      cdkFocusInitial
+      [mat-dialog-close]="true">
+      Ok
+    </button>
+  </mat-card-actions>
+
+</mat-card>
+

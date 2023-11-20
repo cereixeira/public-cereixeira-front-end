@@ -1,0 +1,321 @@
+
+<div class="cv"
+  [ngClass]="{'cv-phone': isPhonePortrait}">
+
+  <div *ngIf="personal()">
+    <!-- personal cabecera -->
+    <div class="grid">
+      <div class="col-left">
+
+        <p class="hl-1"
+          [ngClass]="{'hl-1-phone': isPhonePortrait}">
+          {{personal()?.titulo | uppercase}}
+        </p>
+      </div>
+
+      <div class="col-right">
+        <p class="nombre"
+          [ngClass]="{'nombre-phone': isPhonePortrait}">
+          {{personal()?.nombre}}
+        </p>
+      </div>
+    </div>
+
+    <!-- personal contenido -->
+    <div class="grid" *ngIf="personal()">
+      <div class=" col-left">
+        &nbsp;
+        <img
+          routerLink="{{printUrl}}"
+          src="{{personal()?.urlFoto}}"
+          class="photo"
+          [ngClass]="{'photo-phone': isPhonePortrait}"
+          alt="photo"
+          (click)="togglePrintUrl()"/>
+      </div>
+      <div class=" col-right">
+        <p class="hr-3"
+          [ngClass]="{'hr-3-phone': isPhonePortrait}">
+          <label>{{personal()?.labelTelefono}}:&nbsp;&nbsp;&nbsp;</label>{{personal()?.telefono}}
+        </p>
+        <p class="hr-3"
+          [ngClass]="{'hr-3-phone': isPhonePortrait}">
+          <label>{{personal()?.labelMail}}:&nbsp;&nbsp;&nbsp;</label>{{personal()?.mail}}
+        </p>
+        <p class="hr-3"
+          [ngClass]="{'hr-3-phone': isPhonePortrait}">
+          <label>{{personal()?.labelNacionalidad}}:&nbsp;&nbsp;&nbsp;</label>{{personal()?.nacionalidad}}
+        </p>
+        <p class="hr-3"
+          [ngClass]="{'hr-3-phone': isPhonePortrait}"
+          *ngFor="let item of personal()?.extra">
+          <label>{{ item.label }}:&nbsp;&nbsp;</label>
+          <!-- {{ item.value }} -->
+
+          <a [href]="item.value">
+            {{ item.value }}
+          </a>
+
+        </p>
+      </div>
+    </div>
+  </div>
+<!----------------------------------------------------------------------->
+
+<div *ngIf="experiencia()?.datos">
+  <!-- profesional cabecera sección -->
+  <div class="grid">
+    <div class=" col-left">
+      <p class="hl-1"
+        [ngClass]="{'hl-1-phone': isPhonePortrait}">
+        {{experiencia()?.titulo | uppercase}}
+      </p>
+    </div>
+    <div class=" col-right">
+      <p>&nbsp;</p>
+    </div>
+  </div>
+  <!-- profesional contenido principal -->
+  <div *ngFor="let dato of experiencia()?.datos">
+    <div class="grid">
+      <div class="col-left">
+        <p class="hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          &mdash; [{{dato.fechaIni}}&nbsp;-&nbsp;{{dato.fechaFin}}] &mdash;
+        </p>
+      </div>
+      <div class=" col-right">
+        <p class="hr-2"
+          [ngClass]="{'hr-2-phone': isPhonePortrait}">
+          {{dato.puesto}}
+        </p>
+        <p class="hr-3"
+          [ngClass]="{'hr-3-phone': isPhonePortrait}">
+          {{dato.empresa}}
+        </p>
+      </div>
+    </div>
+
+    <!-- profesional contenido proyectos -->
+    <div class="grid nobreak" *ngFor="let proyecto of dato.proyectos">
+      <div class="col-left">
+        <p class="hl-3"
+          [ngClass]="{'hl-3-phone': isPhonePortrait}">
+          {{proyecto.fechaIni | simpleDatePipe}}&nbsp;-&nbsp;{{proyecto.fechaFin | simpleDatePipe}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p *ngFor="let descripcion of proyecto.descripcion">
+          {{ descripcion }}
+        </p>
+        <p>
+          <label>Tecnologías:&nbsp;</label>{{proyecto.tecnologias}}
+        </p>
+      </div>
+    </div>
+
+  </div><!-- for data -->
+
+</div>
+<!----------------------------------------------------------------------->
+
+<div *ngIf="formacion()">
+    <!-- formación cabecera -->
+    <div class="grid">
+      <div class=" col-left">
+        <p class="hl-1"
+          [ngClass]="{'hl-1-phone': isPhonePortrait}">
+          {{formacion()?.titulo | uppercase}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+    <!-- formación contenido -->
+    <div class="grid nobreak" *ngFor="let dato of formacion()?.datos">
+      <div class=" col-left">
+        <p class="hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          {{dato.fechaFin}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p class="hr-2"
+          [ngClass]="{'hr-2-phone': isPhonePortrait}">
+          {{dato.titulo}}
+        </p>
+        <p class="hr-3"
+          [ngClass]="{'hr-3-phone': isPhonePortrait}">
+          {{dato.nombreCentro}}
+        </p>
+      </div>
+    </div>
+  </div>
+<!----------------------------------------------------------------------->
+
+  <div *ngIf="cursos()?.datos">
+    <!-- cursos cabecera -->
+    <div class="grid">
+      <div class=" col-left">
+        <p class="hl-1"
+          [ngClass]="{'hl-1-phone': isPhonePortrait}">
+          {{cursos()?.titulo | uppercase}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+    <!-- cursos contenido -->
+    <div class="grid nobreak" *ngFor="let dato of cursos()?.datos">
+      <div class=" col-left">
+        <p class="hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          {{dato.fechaFin}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p class="hr-2"
+          [ngClass]="{'hr-2-phone': isPhonePortrait}">
+          {{dato.titulo}}
+          <span class="text-base"
+          *ngIf="dato.horas">
+            &nbsp;({{dato.horas}}&nbsp;h.)
+          </span>
+        </p>
+        <p class="hr-3"
+          [ngClass]="{'hr-3-phone': isPhonePortrait}">
+          {{dato.nombreCentro}}
+        </p>
+        <p *ngIf="dato.descripcion">{{dato.descripcion}}</p>
+      </div>
+    </div>
+  </div>
+
+<!----------------------------------------------------------------------->
+  <div *ngIf="capacidades()">
+    <!-- Aptitudes personales -->
+    <div class="grid">
+      <div class=" col-left">
+        <p class="hl-1"
+          [ngClass]="{'hl-1-phone': isPhonePortrait}">
+          {{capacidades()?.titulo | uppercase}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>&nbsp;</p>
+      </div>
+    </div>
+
+    <!-- Aptitudes lengua materna -->
+    <div class="grid nobreak">
+      <div class=" col-left">
+        <p class="ajustment-hl2-up hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          {{capacidades()?.labelNativo}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>{{capacidades()?.nativo}}</p>
+      </div>
+    </div>
+
+    <div *ngIf="capacidades()?.idiomas">
+      <!-- otros idiomas cabecera -->
+      <div class="grid nobreak">
+        <div class=" col-left">
+          <p class="ajustment-hl2-up hl-2"
+            [ngClass]="{'hl-2-phone': isPhonePortrait}">
+            {{capacidades()?.labelOtrosIdiomas}}
+          </p>
+        </div>
+        <div class=" col-right">
+          <div *ngFor="let idioma of capacidades()?.idiomas">
+            <p>{{idioma.titulo}}</p>
+            <ul class="list-none">
+              <li>
+                {{capacidades()?.labelLectura}}:&nbsp;&nbsp;{{idioma.lectura}}
+              </li>
+              <li>
+                {{capacidades()?.labelEscritura}}:&nbsp;&nbsp;{{idioma.escritura}}
+              </li>
+              <li>
+                {{capacidades()?.labelOral}}:&nbsp;&nbsp;{{idioma.oral}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- aptitudes comunición -->
+    <div class="grid nobreak">
+      <div class=" col-left">
+        <p class="ajustment-hl2-up hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          {{capacidades()?.labelComunicacion}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>{{capacidades()?.comunicacion}}</p>
+      </div>
+    </div>
+
+    <!-- aptitudes organización -->
+    <div class="grid nobreak">
+      <div class=" col-left">
+        <p class="ajustment-hl2-up hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          {{capacidades()?.labelOrganizacion}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>{{capacidades()?.organizacion}}</p>
+      </div>
+    </div>
+
+    <!-- aptitudes técnicas -->
+    <div class="grid nobreak">
+      <div class=" col-left">
+        <p class="ajustment-hl2-up hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          {{capacidades()?.labelTecnicas}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>{{capacidades()?.tecnicas}}</p>
+      </div>
+    </div>
+
+    <!-- carnet -->
+    <div class="grid nobreak">
+      <div class=" col-left">
+        <p class="ajustment-hl2-up hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          {{capacidades()?.labelCarnet}}
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>{{capacidades()?.carnet}}</p>
+      </div>
+    </div>
+
+    <div class="grid nobreak">
+      <div class=" col-left">
+        <p class="ajustment-hl2-up hl-2"
+          [ngClass]="{'hl-2-phone': isPhonePortrait}">
+          Nota
+        </p>
+      </div>
+      <div class=" col-right">
+        <p>Este documento ha sido generado directamente desde mi Web Site personal:
+          <a href="https://cereixeira-fa41c.web.app/es/#/site/cv">
+            <label>http://cereixeira.com</label>
+          </a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

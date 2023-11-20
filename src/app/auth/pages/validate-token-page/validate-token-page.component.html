@@ -1,0 +1,64 @@
+
+<mat-card>
+  <mat-card-title class="pb-2">Validar nuevo usuario</mat-card-title>
+
+  <mat-divider/>
+
+  <mat-card-content>
+    <form autocomplete="off"
+      [formGroup]="validateTokenFormGroup"
+      (ngSubmit)="onValidate()"
+      >
+      <p>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput
+            type="email"
+            formControlName="email"
+            placeholder=""
+            (ngModelChange)="email.set($event)"
+            >
+        </mat-form-field>
+      </p>
+      <p>
+        <textarea matInput
+          formControlName="token"
+          cols="50"
+          rows="5"
+          placeholder="Token"
+          (ngModelChange)="token.set($event)"
+          >
+        </textarea>
+      </p>
+
+      <mat-card-actions class="pb-4">
+        <button
+        mat-stroked-button
+        class="button-left"
+        type="button"
+        (click)="onResendToken()"
+        >
+          Reenviar Token
+      </button>
+
+        <span class="spacer"></span>
+
+        <button mat-flat-button
+          color="primary"
+          class="button-right"
+          type="submit"
+          [disabled]="validateTokenFormGroup.invalid">
+          Validar
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card-content>
+
+  <mat-card-footer >
+    <mat-progress-bar *ngIf="!progressBarModeDeterminate()"
+    mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar *ngIf="progressBarModeDeterminate()"
+      mode="determinate" [value]="progressBarValue()"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>
+

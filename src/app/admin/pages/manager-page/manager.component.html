@@ -1,0 +1,58 @@
+
+<div class="p-4 p-4">
+
+  <mat-form-field class="input-xl">
+    <mat-label>Buscador por email</mat-label>
+    <input
+      type="text"
+      matInput
+      [formControl]="searchInput()"
+      (input)="searchUserMail()"
+      [matAutocomplete]="auto"/>
+
+    <mat-autocomplete autoActiveFirstOption
+      #auto="matAutocomplete"
+      (optionSelected)="onSelectedOption( $event )">
+      <mat-option *ngFor="let user of users()" [value]="user">
+        {{ user.email }}
+      </mat-option>
+
+      <mat-option
+        *ngIf="users().length === 0 && searchInput().value && searchInput().value.length > 0"
+        value="">
+        No se encontró nada con el término {{ searchInput().value }}
+      </mat-option>
+    </mat-autocomplete>
+
+  </mat-form-field>
+
+
+  <mat-card *ngIf="selectedUser()">
+    <mat-card-header>
+      <mat-card-title>{{selectedUser()?.email}}</mat-card-title>
+      <!-- <mat-card-subtitle></mat-card-subtitle> -->
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <p><label>Id:</label>{{selectedUser()?.id}}</p>
+      <p><label>Mail:</label>{{selectedUser()?.email}}</p>
+      <p><label>Name:</label>{{selectedUser()?.name}}</p>
+      <p><label>IsActive:</label>{{selectedUser()?.isActive}}</p>
+      <p><label>Roles:</label>{{selectedUser()?.roles | arrayToString }}</p>
+    </mat-card-content>
+     <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="onSwapToken()">
+        <mat-icon>swap_vert</mat-icon>
+        <span i18n>Swap Token</span>
+    </button>
+    </mat-card-actions>
+    <!-- <mat-card-footer>
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </mat-card-footer> -->
+  </mat-card>
+
+</div>
